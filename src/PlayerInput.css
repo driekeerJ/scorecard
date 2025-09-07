@@ -1,0 +1,83 @@
+.player-input {
+  display: flex;
+  align-items: center;
+  margin: 10px 0;
+  gap: 10px;
+  padding: 10px;
+  background: white;
+  border-radius: 8px;
+  border: 2px solid #e0e0e0;
+  transition: border-color 0.2s ease;
+}
+
+.player-input:hover {
+  border-color: #007bff;
+}
+
+.player-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.move-btn {
+  background: #f8f9fa;
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+  width: 24px;
+  height: 20px;
+  cursor: pointer;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.move-btn:hover:not(:disabled) {
+  background: #007bff;
+  color: white;
+}
+
+.move-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.player-color-indicator {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 2px solid white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  flex-shrink: 0;
+}
+
+.player-name-input {
+  flex: 1;
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 16px;
+  transition: border-color 0.2s ease;
+}
+
+.player-name-input:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+}
+
+.remove-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  padding: 4px;
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+}
+
+.remove-btn:hover {
+  background: rgba(255, 0, 0, 0.1);
+}

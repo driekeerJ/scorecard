@@ -1,0 +1,334 @@
+.race-track-container.horizontal {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 15px;
+  padding: 25px;
+  margin: 25px 0;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  color: white;
+}
+
+.race-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+.race-header h4 {
+  margin: 0;
+  font-size: 1.5em;
+  color: white;
+}
+
+.current-leader {
+  background: rgba(255, 215, 0, 0.2);
+  padding: 8px 15px;
+  border-radius: 20px;
+  border: 2px solid #ffd700;
+  font-weight: bold;
+  animation: glow 2s ease-in-out infinite alternate;
+}
+
+.horizontal-track {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  padding: 20px 15px;
+  margin: 20px 0;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.runner-lane {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+  min-height: 60px;
+}
+
+.runner-lane:last-child {
+  margin-bottom: 0;
+}
+
+.lane-info {
+  display: flex;
+  align-items: center;
+  min-width: 180px;
+  margin-right: 20px;
+  gap: 10px;
+}
+
+.player-color-dot {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 2px solid white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  flex-shrink: 0;
+}
+
+.player-name {
+  font-weight: bold;
+  color: white;
+  min-width: 100px;
+  text-align: left;
+}
+
+.player-score {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-weight: bold;
+  font-size: 0.9em;
+  min-width: 40px;
+  text-align: center;
+}
+
+.track-lane {
+  position: relative;
+  flex: 1;
+  height: 50px;
+  background: linear-gradient(to right, 
+    #e8f5e8 0%, 
+    #f0f8f0 25%, 
+    #f8f8f8 50%, 
+    #f0f8f0 75%, 
+    #e8f5e8 100%
+  );
+  border-radius: 25px;
+  border: 3px solid rgba(255, 255, 255, 0.3);
+  overflow: hidden;
+  box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.start-line {
+  position: absolute;
+  left: 8%;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: linear-gradient(to bottom, #28a745, #20c997);
+  border-radius: 2px;
+}
+
+.start-line::before {
+  content: 'START';
+  position: absolute;
+  top: -25px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 10px;
+  font-weight: bold;
+  color: #28a745;
+  white-space: nowrap;
+}
+
+.finish-line {
+  position: absolute;
+  right: 8%;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: linear-gradient(to bottom, #ffd700, #ff6b6b);
+  border-radius: 2px;
+}
+
+.finish-line::before {
+  content: '🏁';
+  position: absolute;
+  top: -25px;
+  right: -8px;
+  font-size: 16px;
+}
+
+.player-runner {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 3px solid white;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  z-index: 10;
+  cursor: pointer;
+}
+
+.player-runner.leading {
+  animation: bounce 1s infinite, glow 2s ease-in-out infinite alternate;
+  border-color: #ffd700;
+  box-shadow: 0 0 20px rgba(255, 215, 0, 0.8), 0 4px 12px rgba(0, 0, 0, 0.3);
+  transform: translateY(-50%) scale(1.1);
+}
+
+.runner-emoji {
+  font-size: 20px;
+  animation: run 0.5s infinite alternate;
+}
+
+.crown {
+  position: absolute;
+  top: -15px;
+  font-size: 16px;
+  animation: float 2s ease-in-out infinite;
+}
+
+.distance-markers {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+  padding: 0 15px;
+}
+
+.marker {
+  font-size: 0.8em;
+  color: rgba(255, 255, 255, 0.8);
+  font-weight: bold;
+}
+
+.marker.start {
+  color: #28a745;
+}
+
+.marker.finish {
+  color: #ffd700;
+}
+
+/* Animaties */
+@keyframes run {
+  0% { transform: scaleX(1); }
+  100% { transform: scaleX(-1); }
+}
+
+@keyframes bounce {
+  0%, 100% { 
+    transform: translateY(-50%) scale(1.1); 
+  }
+  50% { 
+    transform: translateY(-60%) scale(1.1); 
+  }
+}
+
+@keyframes float {
+  0%, 100% { 
+    transform: translateY(0px); 
+  }
+  50% { 
+    transform: translateY(-5px); 
+  }
+}
+
+.race-track-container.horizontal.game-completed {
+  background: linear-gradient(135deg, #ffd700 0%, #ff6b6b 100%);
+}
+
+.race-track-container.horizontal.game-completed .current-leader {
+  background: rgba(255, 255, 255, 0.3);
+  border-color: white;
+  animation: celebration 3s ease-in-out infinite;
+}
+
+.race-track-container.horizontal.game-completed .player-runner.leading {
+  animation: victory-dance 1s infinite, glow 2s ease-in-out infinite alternate;
+}
+
+@keyframes celebration {
+  0%, 100% { 
+    transform: scale(1); 
+  }
+  50% { 
+    transform: scale(1.05); 
+  }
+}
+
+@keyframes victory-dance {
+  0%, 100% { 
+    transform: translateY(-50%) scale(1.2) rotate(0deg); 
+  }
+  25% { 
+    transform: translateY(-60%) scale(1.2) rotate(-5deg); 
+  }
+  75% { 
+    transform: translateY(-60%) scale(1.2) rotate(5deg); 
+  }
+}
+
+@keyframes glow {
+  0% {
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.6);
+  }
+  100% {
+    box-shadow: 0 0 30px rgba(255, 215, 0, 1);
+  }
+}
+
+.race-track-container.horizontal.animating .player-runner {
+  transition: left 2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.race-track-container.horizontal.animating .runner-emoji {
+  animation: run 0.2s infinite alternate;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .race-track-container.horizontal {
+    padding: 15px 0;
+    margin: 25px 0;
+    border-radius: 0;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .race-header {
+    flex-direction: column;
+    gap: 10px;
+    text-align: center;
+    padding: 0 10px 15px 10px;
+  }
+  
+  .horizontal-track {
+    margin: 20px 0;
+    padding: 20px 10px;
+    border-radius: 0;
+    border: none;
+  }
+  
+  .runner-lane {
+    flex-direction: column;
+    align-items: stretch;
+    margin-bottom: 25px;
+  }
+  
+  .lane-info {
+    margin-right: 0;
+    margin-bottom: 10px;
+    justify-content: center;
+    min-width: auto;
+  }
+  
+  .track-lane {
+    height: 40px;
+  }
+  
+  .player-runner {
+    width: 35px;
+    height: 35px;
+  }
+  
+  .runner-emoji {
+    font-size: 16px;
+  }
+  
+  .distance-markers {
+    flex-wrap: wrap;
+    gap: 5px;
+    justify-content: center;
+    margin: 10px 0 0 0;
+    padding: 0 10px;
+  }
+}
