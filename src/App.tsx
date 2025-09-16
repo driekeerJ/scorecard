@@ -6,11 +6,17 @@ import { HomePage } from './pages/HomePage'
 import { CreateGame } from './pages/CreateGame'
 import { GamePage } from './pages/GamePage'
 
-// Kleurenpalet voor spelers
+// Kleurenpalet voor spelers - 9 sterk contrasterende kleuren
 const PLAYER_COLORS = [
-  '#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', 
-  '#FFEAA7', '#DDA0DD', '#98D8C8', '#F7DC6F',
-  '#BB8FCE', '#85C1E9', '#F8C471', '#82E0AA'
+  '#E74C3C', // Helder rood
+  '#3498DB', // Helder blauw  
+  '#2ECC71', // Helder groen
+  '#F39C12', // Oranje
+  '#9B59B6', // Paars
+  '#E91E63', // Roze/magenta
+  '#1ABC9C', // Turquoise
+  '#F1C40F', // Geel
+  '#34495E'  // Donkerblauw/grijs
 ];
 
 function App() {
@@ -20,12 +26,11 @@ function App() {
     return Date.now().toString() + Math.random().toString(36).substr(2, 9);
   }
 
-  const createGame = (gameName: string, players: Player[]): number => {
-    const validPlayers = players.filter(p => p.name.trim()).map((player, index) => ({
+  const createGame = (gameName: string, players: Player[], winCondition: 'highest' | 'lowest'): number => {
+    const validPlayers = players.filter(p => p.name.trim()).map((player) => ({
       ...player,
       score: 0,
-      position: 0,
-      color: PLAYER_COLORS[index % PLAYER_COLORS.length]
+      position: 0
     }));
 
     const newGame: Game = {
@@ -35,7 +40,8 @@ function App() {
       rounds: [],
       currentRound: 1,
       isActive: true,
-      createdAt: new Date()
+      createdAt: new Date(),
+      winCondition: winCondition
     }
     
     setGames(prevGames => [...prevGames, newGame])

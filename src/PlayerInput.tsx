@@ -9,9 +9,11 @@ export const PlayerInput: React.FC<PlayerInputProps> = ({
   onRemove,
   onMoveUp,
   onMoveDown,
+  onColorChange,
   canRemove,
   canMoveUp,
-  canMoveDown
+  canMoveDown,
+  availableColors
 }) => {
   return (
     <div className="player-input">
@@ -34,10 +36,46 @@ export const PlayerInput: React.FC<PlayerInputProps> = ({
         </button>
       </div>
       
-      <div 
-        className="player-color-indicator" 
-        style={{ backgroundColor: player.color }}
-      ></div>
+      <div className="player-color-section">
+        <div 
+          className="player-color-indicator" 
+          style={{ backgroundColor: player.color }}
+          title="Huidige kleur"
+        ></div>
+        <select
+          value={player.color}
+          onChange={(e) => onColorChange(index, e.target.value)}
+          className="color-dropdown"
+          title="Kies je kleur"
+        >
+          {availableColors.map((color) => {
+            const getColorName = (hexColor: string) => {
+              const colorNames: { [key: string]: string } = {
+                '#E74C3C': 'Rood',
+                '#3498DB': 'Blauw',
+                '#2ECC71': 'Groen',
+                '#F39C12': 'Oranje',
+                '#9B59B6': 'Paars',
+                '#E91E63': 'Roze',
+                '#1ABC9C': 'Turquoise',
+                '#F1C40F': 'Geel',
+                '#34495E': 'Donkerblauw'
+              };
+              return colorNames[hexColor] || 'Onbekend';
+            };
+            
+            return (
+              <option 
+                key={color} 
+                value={color}
+                style={{ backgroundColor: color, color: 'white' }}
+              >
+                {getColorName(color)}
+              </option>
+            );
+          })}
+        </select>
+      </div>
       
       <input
         type="text"

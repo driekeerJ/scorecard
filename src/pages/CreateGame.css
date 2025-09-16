@@ -41,6 +41,53 @@
   margin-bottom: 40px;
 }
 
+.win-condition-section {
+  margin-bottom: 40px;
+}
+
+.win-condition-section h2 {
+  margin: 0 0 15px 0;
+  color: #333;
+  font-size: 1.5em;
+}
+
+.win-condition-options {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.win-condition-option {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 20px;
+  border: 2px solid #e0e0e0;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background: white;
+}
+
+.win-condition-option:hover {
+  border-color: #667eea;
+  transform: translateY(-1px);
+}
+
+.win-condition-option input[type="radio"] {
+  margin: 0;
+}
+
+.win-condition-option input[type="radio"]:checked + span {
+  color: #667eea;
+  font-weight: bold;
+}
+
+.win-condition-option:has(input[type="radio"]:checked) {
+  border-color: #667eea;
+  background: rgba(102, 126, 234, 0.05);
+}
+
 .game-name-section h2 {
   margin: 0 0 15px 0;
   color: #333;

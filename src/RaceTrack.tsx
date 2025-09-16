@@ -38,25 +38,52 @@ const PlayerRunner: React.FC<PlayerAvatarProps> = ({ player, position, isLeading
   );
 };
 
-export const RaceTrack: React.FC<RaceTrackProps> = ({ players, isAnimating, isGameCompleted }) => {
-  // Sorteer spelers op score (hoogste eerst)
-  const sortedPlayers = [...players].sort((a, b) => b.score - a.score);
+export const RaceTrack: React.FC<RaceTrackProps> = ({ players, isAnimating, isGameCompleted, winCondition }) => {
+  // Sorteer spelers op score (afhankelijk van winCondition)
+  const sortedPlayers = [...players].sort((a, b) => {
+    if (winCondition === 'highest') {
+      return b.score - a.score;
+    } else {
+      // Voor 'lowest': sorteer van laag naar hoog, maar alleen als scores > 0
+      const aScore = a.score || Infinity;
+      const bScore = b.score || Infinity;
+      return aScore - bScore;
+    }
+  });
   
   // Bereken posities op de renbaan
   const playersWithPositions = players.map((player) => {
-    const maxScore = Math.max(...players.map(p => p.score), 1); // Minimum 1 om deling door 0 te voorkomen
-    
     let progress: number;
+    
     if (player.score === 0) {
       progress = 8; // Start positie (iets na de start lijn)
-    } else if (isGameCompleted) {
-      // Bij voltooid spel: winnaar gaat naar finish (90%)
-      const scoreRatio = player.score / maxScore;
-      progress = 8 + (scoreRatio * 82); // 8% tot 90%
     } else {
-      // Tijdens spel: max 75% voor de leider
-      const scoreRatio = player.score / maxScore;
-      progress = 8 + (scoreRatio * 67); // 8% tot 75%
+      let scoreRatio: number;
+      
+      if (winCondition === 'highest') {
+        const maxScore = Math.max(...players.map(p => p.score), 1);
+        scoreRatio = player.score / maxScore;
+      } else {
+        // Voor 'lowest': lager is beter, dus inverteer de ratio
+        const minScore = Math.min(...players.filter(p => p.score > 0).map(p => p.score));
+        const maxScore = Math.max(...players.map(p => p.score), 1);
+        
+        if (minScore === maxScore) {
+          // Alle spelers hebben dezelfde score
+          scoreRatio = 1;
+        } else {
+          // Inverteer de ratio: lagere score = hogere positie
+          scoreRatio = 1 - ((player.score - minScore) / (maxScore - minScore));
+        }
+      }
+      
+      if (isGameCompleted) {
+        // Bij voltooid spel: winnaar gaat naar finish (90%)
+        progress = 8 + (scoreRatio * 82); // 8% tot 90%
+      } else {
+        // Tijdens spel: max 75% voor de leider
+        progress = 8 + (scoreRatio * 67); // 8% tot 75%
+      }
     }
     
     return {
@@ -76,7 +103,7 @@ export const RaceTrack: React.FC<RaceTrackProps> = ({ players, isAnimating, isGa
         {hasWinner && (
           <div className="current-leader">
             <span>
-              {isGameCompleted ? '🏆 Winnaar: ' : '🥇 Leidt: '}
+              {isGameCompleted ? '🏆 Winnaar: ' : (winCondition === 'highest' ? '🥇 Leidt: ' : '🥇 Laagste: ')}
               {winner.name} ({winner.score} punten)
             </span>
           </div>

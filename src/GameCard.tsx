@@ -54,6 +54,7 @@ export const GameCard: React.FC<GameCardProps> = ({ game, onAddRound, onEndGame 
         players={game.players} 
         isAnimating={isSubmitting} 
         isGameCompleted={!game.isActive}
+        winCondition={game.winCondition}
       />
 
       {/* Alleen tonen als spel actief is */}

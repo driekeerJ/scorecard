@@ -26,6 +26,7 @@ export interface Game {
   currentRound: number;
   isActive: boolean;
   createdAt: Date;
+  winCondition: 'highest' | 'lowest';
 }
 
 export interface GameState {
@@ -40,9 +41,11 @@ export interface PlayerInputProps {
   onRemove: (index: number) => void;
   onMoveUp: (index: number) => void;
   onMoveDown: (index: number) => void;
+  onColorChange: (index: number, color: string) => void;
   canRemove: boolean;
   canMoveUp: boolean;
   canMoveDown: boolean;
+  availableColors: string[];
 }
 
 export interface GameCardProps {
@@ -55,6 +58,7 @@ export interface RaceTrackProps {
   players: Player[];
   isAnimating: boolean;
   isGameCompleted: boolean;
+  winCondition: 'highest' | 'lowest';
 }
 
 export interface PlayerAvatarProps {
