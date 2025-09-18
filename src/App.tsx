@@ -1,9 +1,10 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import { Game, Player, RoundScore } from './types'
 import { HomePage } from './pages/HomePage'
 import { CreateGame } from './pages/CreateGame'
 import { GamePage } from './pages/GamePage'
+import { saveGamesToLocalStorage, loadGamesFromLocalStorage } from './utils/localStorage'
 
 // Kleurenpalet voor spelers - 9 sterk contrasterende kleuren
 const PLAYER_COLORS = [
@@ -20,6 +21,21 @@ const PLAYER_COLORS = [
 
 function App() {
   const [games, setGames] = useState<Game[]>([])
+
+  // Laad games uit localStorage bij app start
+  useEffect(() => {
+    const savedGames = loadGamesFromLocalStorage();
+    if (savedGames.length > 0) {
+      setGames(savedGames);
+    }
+  }, []);
+
+  // Sla games op in localStorage wanneer games veranderen
+  useEffect(() => {
+    if (games.length > 0) {
+      saveGamesToLocalStorage(games);
+    }
+  }, [games]);
 
   const generatePlayerId = (): string => {
     return Date.now().toString() + Math.random().toString(36).substr(2, 9);
@@ -88,7 +104,19 @@ function App() {
   }
 
   const deleteGame = (gameId: number): void => {
-    setGames(prevGames => prevGames.filter(game => game.id !== gameId));
+    setGames(prevGames => {
+      const updatedGames = prevGames.filter(game => game.id !== gameId);
+      // Als er geen games meer zijn, clear dan ook localStorage
+      if (updatedGames.length === 0) {
+        localStorage.removeItem('scorecard-games');
+      }
+      return updatedGames;
+    });
+  }
+
+  const clearAllGames = (): void => {
+    setGames([]);
+    localStorage.removeItem('scorecard-games');
   }
 
   return (
@@ -101,6 +129,7 @@ function App() {
               <HomePage 
                 games={games}
                 onDeleteGame={deleteGame}
+                onClearAllGames={clearAllGames}
               />
             } 
           />

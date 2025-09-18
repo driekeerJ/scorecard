@@ -5,9 +5,10 @@ import { Game } from '../types';
 interface HomePageProps {
   games: Game[];
   onDeleteGame: (gameId: number) => void;
+  onClearAllGames: () => void;
 }
 
-export const HomePage: React.FC<HomePageProps> = ({ games, onDeleteGame }) => {
+export const HomePage: React.FC<HomePageProps> = ({ games, onDeleteGame, onClearAllGames }) => {
   const navigate = useNavigate();
 
   const activeGames = games.filter(game => game.isActive);
@@ -176,13 +177,26 @@ export const HomePage: React.FC<HomePageProps> = ({ games, onDeleteGame }) => {
             )}
 
             {/* Quick actions */}
-            <div className="fixed bottom-5 sm:bottom-8 right-5 sm:right-8 z-50">
+            <div className="fixed bottom-5 sm:bottom-8 right-5 sm:right-8 z-50 flex flex-col gap-3">
               <button 
                 onClick={() => navigate('/create')}
                 className="bg-gradient-to-r from-green-500 to-emerald-500 text-white px-4 sm:px-5 py-3 sm:py-4 rounded-full shadow-lg hover:shadow-xl transform hover:-translate-y-1 hover:scale-105 transition-all duration-300 font-bold"
               >
                 ➕ Nieuw Spel
               </button>
+              
+              {games.length > 0 && (
+                <button 
+                  onClick={() => {
+                    if (confirm('Weet je zeker dat je alle spellen wilt verwijderen? Dit kan niet ongedaan worden gemaakt.')) {
+                      onClearAllGames();
+                    }
+                  }}
+                  className="bg-gradient-to-r from-red-500 to-red-600 text-white px-4 sm:px-5 py-2 sm:py-3 rounded-full shadow-lg hover:shadow-xl transform hover:-translate-y-1 hover:scale-105 transition-all duration-300 font-bold text-sm"
+                >
+                  🗑️ Alles Wissen
+                </button>
+              )}
             </div>
           </div>
         )}
