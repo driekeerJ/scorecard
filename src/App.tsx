@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
-import './App.css'
 import { Game, Player, RoundScore } from './types'
 import { HomePage } from './pages/HomePage'
 import { CreateGame } from './pages/CreateGame'
@@ -94,7 +93,7 @@ function App() {
 
   return (
     <Router>
-      <div className="app">
+      <div className="min-h-screen">
         <Routes>
           <Route 
             path="/" 

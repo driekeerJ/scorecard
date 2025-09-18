@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Player } from '../types';
 import { PlayerInput } from '../PlayerInput';
-import './CreateGame.css';
 
 interface CreateGameProps {
   onCreateGame: (gameName: string, players: Player[], winCondition: 'highest' | 'lowest') => number;
@@ -91,93 +90,131 @@ export const CreateGame: React.FC<CreateGameProps> = ({
   const canCreateGame = gameName.trim() && players.filter(p => p.name.trim()).length >= 2;
 
   return (
-    <div className="create-game-page">
-      <div className="page-header">
-        <h1>🎮 Nieuw Spelletje Aanmaken</h1>
-        <p>Stel je spel in en voeg spelers toe om te beginnen met racen!</p>
-      </div>
-
-      <div className="create-game-form">
-        <div className="game-name-section">
-          <h2>🏷️ Spel Naam</h2>
-          <input
-            type="text"
-            placeholder="Bijvoorbeeld: Yahtzee, Monopoly, etc."
-            value={gameName}
-            onChange={(e) => setGameName(e.target.value)}
-            className="game-name-input"
-          />
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-100 p-2 sm:p-4 md:p-5">
+      <div className="max-w-2xl mx-auto">
+        {/* Header */}
+        <div className="text-center p-6 sm:p-8 bg-white rounded-2xl shadow-lg mb-6">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-3 bg-gradient-to-r from-blue-500 to-purple-600 bg-clip-text text-transparent">
+            🎮 Nieuw Spelletje Aanmaken
+          </h1>
+          <p className="text-gray-600 text-sm sm:text-base">
+            Stel je spel in en voeg spelers toe om te beginnen met racen!
+          </p>
         </div>
 
-        <div className="win-condition-section">
-          <h2>🏆 Wie wint?</h2>
-          <div className="win-condition-options">
-            <label className="win-condition-option">
-              <input
-                type="radio"
-                name="winCondition"
-                value="highest"
-                checked={winCondition === 'highest'}
-                onChange={(e) => setWinCondition(e.target.value as 'highest' | 'lowest')}
-              />
-              <span>Hoogste score wint</span>
-            </label>
-            <label className="win-condition-option">
-              <input
-                type="radio"
-                name="winCondition"
-                value="lowest"
-                checked={winCondition === 'lowest'}
-                onChange={(e) => setWinCondition(e.target.value as 'highest' | 'lowest')}
-              />
-              <span>Laagste score wint</span>
-            </label>
-          </div>
-        </div>
-
-        <div className="players-section">
-          <h2>👥 Spelers (minimaal 2)</h2>
-          <p className="players-subtitle">Sleep de volgorde om de start volgorde te bepalen</p>
-          
-          <div className="players-list">
-            {players.map((player, index) => (
-              <PlayerInput
-                key={player.id}
-                player={player}
-                index={index}
-                onUpdate={updatePlayer}
-                onRemove={removePlayer}
-                onMoveUp={movePlayerUp}
-                onMoveDown={movePlayerDown}
-                onColorChange={updatePlayerColor}
-                canRemove={players.length > 1}
-                canMoveUp={index > 0}
-                canMoveDown={index < players.length - 1}
-                availableColors={playerColors}
-              />
-            ))}
+        <div className="space-y-6">
+          {/* Game Name Section */}
+          <div className="bg-white rounded-xl shadow-lg p-5 sm:p-6">
+            <h2 className="text-lg sm:text-xl font-bold text-gray-800 mb-3 flex items-center gap-2">
+              🏷️ Spel Naam
+            </h2>
+            <input
+              type="text"
+              placeholder="Bijvoorbeeld: Yahtzee, Monopoly, etc."
+              value={gameName}
+              onChange={(e) => setGameName(e.target.value)}
+              className="w-full p-3 sm:p-4 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:outline-none transition-colors text-base sm:text-lg"
+            />
           </div>
 
-          <button onClick={addPlayer} className="add-player-btn">
-            ➕ Nog een speler toevoegen
-          </button>
-        </div>
+          {/* Win Condition Section */}
+          <div className="bg-white rounded-xl shadow-lg p-5 sm:p-6">
+            <h2 className="text-lg sm:text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
+              🏆 Wie wint?
+            </h2>
+            <div className="space-y-3">
+              <label className="flex items-center gap-3 p-3 border-2 border-gray-200 rounded-lg hover:border-blue-300 cursor-pointer transition-colors">
+                <input
+                  type="radio"
+                  name="winCondition"
+                  value="highest"
+                  checked={winCondition === 'highest'}
+                  onChange={(e) => setWinCondition(e.target.value as 'highest' | 'lowest')}
+                  className="w-4 h-4 text-blue-600"
+                />
+                <span className="text-gray-700 font-medium">Hoogste score wint</span>
+              </label>
+              <label className="flex items-center gap-3 p-3 border-2 border-gray-200 rounded-lg hover:border-blue-300 cursor-pointer transition-colors">
+                <input
+                  type="radio"
+                  name="winCondition"
+                  value="lowest"
+                  checked={winCondition === 'lowest'}
+                  onChange={(e) => setWinCondition(e.target.value as 'highest' | 'lowest')}
+                  className="w-4 h-4 text-blue-600"
+                />
+                <span className="text-gray-700 font-medium">Laagste score wint</span>
+              </label>
+            </div>
+          </div>
 
-        <div className="actions-section">
-          <button 
-            onClick={handleCreateGame}
-            disabled={!canCreateGame}
-            className="create-game-btn"
-          >
-            🚀 Spel Starten!
-          </button>
-          
-          {!canCreateGame && (
-            <p className="validation-message">
-              {!gameName.trim() && "⚠️ Voer een spelnaam in"}
-              {gameName.trim() && players.filter(p => p.name.trim()).length < 2 && "⚠️ Voeg minimaal 2 spelers toe"}
+          {/* Players Section */}
+          <div className="bg-white rounded-xl shadow-lg p-5 sm:p-6">
+            <h2 className="text-lg sm:text-xl font-bold text-gray-800 mb-2 flex items-center gap-2">
+              👥 Spelers (minimaal 2)
+            </h2>
+            <p className="text-gray-600 text-sm mb-4">
+              Sleep de volgorde om de start volgorde te bepalen
             </p>
-          )}
+            
+            <div className="space-y-3 mb-4">
+              {players.map((player, index) => (
+                <PlayerInput
+                  key={player.id}
+                  player={player}
+                  index={index}
+                  onUpdate={updatePlayer}
+                  onRemove={removePlayer}
+                  onMoveUp={movePlayerUp}
+                  onMoveDown={movePlayerDown}
+                  onColorChange={updatePlayerColor}
+                  canRemove={players.length > 1}
+                  canMoveUp={index > 0}
+                  canMoveDown={index < players.length - 1}
+                  availableColors={playerColors}
+                />
+              ))}
+            </div>
+
+            <button 
+              onClick={addPlayer} 
+              className="w-full bg-gradient-to-r from-green-500 to-emerald-500 text-white p-3 rounded-lg font-bold hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-300"
+            >
+              ➕ Nog een speler toevoegen
+            </button>
+          </div>
+
+          {/* Actions Section */}
+          <div className="bg-white rounded-xl shadow-lg p-5 sm:p-6">
+            <button 
+              onClick={handleCreateGame}
+              disabled={!canCreateGame}
+              className={`w-full p-4 rounded-xl font-bold text-lg transition-all duration-300 ${
+                canCreateGame 
+                  ? 'bg-gradient-to-r from-blue-500 to-purple-600 text-white hover:shadow-lg transform hover:-translate-y-1' 
+                  : 'bg-gray-200 text-gray-500 cursor-not-allowed'
+              }`}
+            >
+              🚀 Spel Starten!
+            </button>
+            
+            {!canCreateGame && (
+              <p className="text-red-500 text-sm mt-3 text-center">
+                {!gameName.trim() && "⚠️ Voer een spelnaam in"}
+                {gameName.trim() && players.filter(p => p.name.trim()).length < 2 && "⚠️ Voeg minimaal 2 spelers toe"}
+              </p>
+            )}
+          </div>
+
+          {/* Navigation */}
+          <div className="text-center">
+            <button 
+              onClick={() => navigate('/')}
+              className="text-gray-600 hover:text-gray-800 underline"
+            >
+              ← Terug naar overzicht
+            </button>
+          </div>
         </div>
       </div>
     </div>

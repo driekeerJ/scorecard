@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { GameCardProps, RoundScore } from './types';
 import { RaceTrack } from './RaceTrack';
-import './GameCard.css';
 
 export const GameCard: React.FC<GameCardProps> = ({ game, onAddRound, onEndGame }) => {
   const [roundScores, setRoundScores] = useState<{ [playerId: string]: string }>({});
@@ -33,51 +32,60 @@ export const GameCard: React.FC<GameCardProps> = ({ game, onAddRound, onEndGame 
   );
 
   return (
-    <div className="game-card">
-      <div className="game-header">
-        <h3>{game.name}</h3>
-        <div className="game-info">
-          <span className="round-counter">Ronde {game.currentRound}</span>
-          {game.isActive && (
-            <button 
-              onClick={() => onEndGame(game.id)}
-              className="end-game-btn"
-            >
-              🏁 Spel Beëindigen
-            </button>
-          )}
+    <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
+      {/* Game Header */}
+      <div className="bg-gradient-to-r from-blue-500 to-purple-600 text-white p-4 sm:p-6">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <h3 className="text-xl sm:text-2xl font-bold">{game.name}</h3>
+          <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
+            <span className="bg-white bg-opacity-20 px-3 py-1 rounded-full text-sm font-medium">
+              Ronde {game.currentRound}
+            </span>
+            {game.isActive && (
+              <button 
+                onClick={() => onEndGame(game.id)}
+                className="bg-white text-blue-600 px-4 py-2 rounded-lg font-bold hover:bg-gray-100 transition-colors"
+              >
+                🏁 Spel Beëindigen
+              </button>
+            )}
+          </div>
         </div>
       </div>
 
-      {/* Racebaan visualisatie */}
-      <RaceTrack 
-        players={game.players} 
-        isAnimating={isSubmitting} 
-        isGameCompleted={!game.isActive}
-        winCondition={game.winCondition}
-      />
+      {/* Race Track */}
+      <div className="p-4 sm:p-6">
+        <RaceTrack 
+          players={game.players} 
+          isAnimating={isSubmitting} 
+          isGameCompleted={!game.isActive}
+          winCondition={game.winCondition}
+        />
+      </div>
 
-      {/* Alleen tonen als spel actief is */}
+      {/* Round Input Section - Only show if game is active */}
       {game.isActive && (
-        <div className="round-input-section">
-          <h4>📝 Ronde {game.currentRound} Scores</h4>
-          <div className="round-scores">
+        <div className="p-4 sm:p-6 border-t border-gray-200">
+          <h4 className="text-lg sm:text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
+            📝 Ronde {game.currentRound} Scores
+          </h4>
+          <div className="space-y-3 mb-6">
             {game.players.map((player) => (
-              <div key={player.id} className="player-round-score">
-                <div className="player-info">
+              <div key={player.id} className="flex flex-col sm:flex-row sm:items-center gap-3 p-3 bg-gray-50 rounded-xl">
+                <div className="flex items-center gap-3 flex-1">
                   <div 
-                    className="player-color-dot"
+                    className="w-6 h-6 rounded-full border-2 border-white shadow-md"
                     style={{ backgroundColor: player.color }}
                   ></div>
-                  <span className="player-name">{player.name}</span>
-                  <span className="total-score">({player.score} totaal)</span>
+                  <span className="font-bold text-gray-800 flex-1">{player.name}</span>
+                  <span className="text-sm text-gray-600">({player.score} totaal)</span>
                 </div>
                 <input
                   type="number"
                   value={roundScores[player.id] || ''}
                   onChange={(e) => handleScoreChange(player.id, e.target.value)}
                   placeholder="0"
-                  className="round-score-input"
+                  className="w-full sm:w-24 bg-white border-2 border-gray-200 rounded-lg px-3 py-2 text-center focus:border-blue-500 focus:outline-none transition-colors"
                   min="0"
                 />
               </div>
@@ -87,34 +95,40 @@ export const GameCard: React.FC<GameCardProps> = ({ game, onAddRound, onEndGame 
           <button
             onClick={submitRound}
             disabled={!canSubmitRound || isSubmitting}
-            className={`submit-round-btn ${isSubmitting ? 'submitting' : ''}`}
+            className={`w-full p-4 rounded-xl font-bold text-lg transition-all duration-300 ${
+              canSubmitRound && !isSubmitting
+                ? 'bg-gradient-to-r from-green-500 to-emerald-500 text-white hover:shadow-lg transform hover:-translate-y-1'
+                : 'bg-gray-200 text-gray-500 cursor-not-allowed'
+            }`}
           >
             {isSubmitting ? '⏳ Verwerken...' : '✅ Ronde Voltooien'}
           </button>
         </div>
       )}
 
-      {/* Rondegeschiedenis */}
+      {/* Rounds History */}
       {game.rounds.length > 0 && (
-        <div className="rounds-history">
-          <h4>📊 Rondegeschiedenis</h4>
-          <div className="rounds-list">
+        <div className="p-4 sm:p-6 border-t border-gray-200 bg-gray-50">
+          <h4 className="text-lg sm:text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
+            📊 Rondegeschiedenis
+          </h4>
+          <div className="space-y-3">
             {game.rounds.slice(-3).reverse().map((round) => (
-              <div key={round.id} className="round-summary">
-                <div className="round-header">
-                  <span className="round-number">Ronde {round.roundNumber}</span>
-                  <span className="round-time">
+              <div key={round.id} className="bg-white rounded-lg p-4 shadow-sm">
+                <div className="flex justify-between items-center mb-3">
+                  <span className="font-bold text-gray-800">Ronde {round.roundNumber}</span>
+                  <span className="text-sm text-gray-600">
                     {new Date(round.timestamp).toLocaleTimeString('nl-NL', {
                       hour: '2-digit',
                       minute: '2-digit'
                     })}
                   </span>
                 </div>
-                <div className="round-scores-summary">
+                <div className="flex flex-wrap gap-2">
                   {round.scores.map((score) => {
                     const player = game.players.find(p => p.id === score.playerId);
                     return player ? (
-                      <span key={score.playerId} className="player-round-result">
+                      <span key={score.playerId} className="bg-blue-100 text-blue-700 px-2 py-1 rounded-lg text-sm font-medium">
                         {player.name}: +{score.score}
                       </span>
                     ) : null;
@@ -123,7 +137,7 @@ export const GameCard: React.FC<GameCardProps> = ({ game, onAddRound, onEndGame 
               </div>
             ))}
             {game.rounds.length > 3 && (
-              <div className="more-rounds">
+              <div className="text-center text-gray-500 text-sm">
                 ... en nog {game.rounds.length - 3} rondes
               </div>
             )}

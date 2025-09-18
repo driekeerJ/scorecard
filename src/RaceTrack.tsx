@@ -1,37 +1,52 @@
 import React from 'react';
 import { RaceTrackProps, PlayerAvatarProps } from './types';
-import './RaceTrack.css';
 
 const PlayerRunner: React.FC<PlayerAvatarProps> = ({ player, position, isLeading }) => {
   return (
-    <div className="runner-lane">
-      <div className="lane-info">
-        <div 
-          className="player-color-dot"
-          style={{ backgroundColor: player.color }}
-        ></div>
-        <span className="player-name">{player.name}</span>
-        <span className="player-score">{player.score}</span>
+    <div className="mb-3">
+      {/* Lane info */}
+      <div className="flex items-center justify-between mb-2 text-sm">
+        <div className="flex items-center gap-2">
+          <div 
+            className="w-4 h-4 rounded-full border border-white shadow-sm"
+            style={{ backgroundColor: player.color }}
+          ></div>
+          <span className="font-bold text-gray-800">{player.name}</span>
+        </div>
+        <span className="bg-gray-100 text-gray-700 px-2 py-1 rounded-lg font-bold">
+          {player.score}
+        </span>
       </div>
       
-      <div className="track-lane">
-        {/* Start lijn */}
-        <div className="start-line"></div>
+      {/* Track lane */}
+      <div className="relative h-12 bg-gradient-to-r from-green-200 via-yellow-200 to-red-200 rounded-lg border-2 border-gray-300 overflow-hidden">
+        {/* Start line */}
+        <div className="absolute left-2 top-0 bottom-0 w-1 bg-green-600 rounded"></div>
         
-        {/* Finish lijn */}
-        <div className="finish-line"></div>
+        {/* Finish line */}
+        <div className="absolute right-2 top-0 bottom-0 w-1 bg-red-600 rounded"></div>
         
-        {/* Speler avatar die beweegt */}
+        {/* Progress markers */}
+        <div className="absolute left-1/4 top-0 bottom-0 w-0.5 bg-gray-400 opacity-50"></div>
+        <div className="absolute left-1/2 top-0 bottom-0 w-0.5 bg-gray-400 opacity-50"></div>
+        <div className="absolute left-3/4 top-0 bottom-0 w-0.5 bg-gray-400 opacity-50"></div>
+        
+        {/* Player runner */}
         <div 
-          className={`player-runner ${isLeading ? 'leading' : ''}`}
+          className={`absolute top-1 w-10 h-10 rounded-full flex items-center justify-center text-lg font-bold transition-all duration-1000 ease-out transform ${
+            isLeading ? 'scale-110' : ''
+          }`}
           style={{ 
-            left: `${Math.min(position, 95)}%`,
+            left: `${Math.min(position, 92)}%`,
             backgroundColor: player.color,
-            transition: 'left 1.5s ease-out, transform 0.3s ease'
+            color: 'white',
+            boxShadow: '0 2px 8px rgba(0,0,0,0.3)'
           }}
         >
-          <span className="runner-emoji">🏃</span>
-          {isLeading && <div className="crown">👑</div>}
+          <span>🏃</span>
+          {isLeading && (
+            <div className="absolute -top-3 -right-1 text-yellow-400 text-lg">👑</div>
+          )}
         </div>
       </div>
     </div>
@@ -97,20 +112,25 @@ export const RaceTrack: React.FC<RaceTrackProps> = ({ players, isAnimating, isGa
   const hasWinner = winner && winner.score > 0;
 
   return (
-    <div className={`race-track-container horizontal ${isAnimating ? 'animating' : ''} ${isGameCompleted ? 'game-completed' : ''}`}>
-      <div className="race-header">
-        <h4>🏁 Renbaan</h4>
+    <div className={`bg-gray-50 rounded-xl p-4 sm:p-6 ${isAnimating ? 'animate-pulse' : ''} ${isGameCompleted ? 'bg-yellow-50' : ''}`}>
+      {/* Race header */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-6 gap-3">
+        <h4 className="text-lg sm:text-xl font-bold text-gray-800 flex items-center gap-2">
+          🏁 Renbaan
+        </h4>
         {hasWinner && (
-          <div className="current-leader">
-            <span>
+          <div className="bg-white rounded-lg px-3 py-2 shadow-sm">
+            <span className="text-sm sm:text-base font-medium text-gray-700">
               {isGameCompleted ? '🏆 Winnaar: ' : (winCondition === 'highest' ? '🥇 Leidt: ' : '🥇 Laagste: ')}
-              {winner.name} ({winner.score} punten)
+              <span className="font-bold text-gray-900">{winner.name}</span>
+              <span className="text-gray-600"> ({winner.score} punten)</span>
             </span>
           </div>
         )}
       </div>
       
-      <div className="horizontal-track">
+      {/* Track lanes */}
+      <div className="space-y-4">
         {playersWithPositions.map((player) => (
           <PlayerRunner
             key={player.id}
@@ -122,12 +142,12 @@ export const RaceTrack: React.FC<RaceTrackProps> = ({ players, isAnimating, isGa
       </div>
       
       {/* Distance markers */}
-      <div className="distance-markers">
-        <span className="marker start">START</span>
-        <span className="marker quarter">25%</span>
-        <span className="marker half">50%</span>
-        <span className="marker three-quarter">75%</span>
-        <span className="marker finish">FINISH</span>
+      <div className="flex justify-between mt-4 text-xs text-gray-500 px-2">
+        <span>START</span>
+        <span>25%</span>
+        <span>50%</span>
+        <span>75%</span>
+        <span>FINISH</span>
       </div>
     </div>
   );

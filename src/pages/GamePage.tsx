@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Game, RoundScore } from '../types';
 import { GameCard } from '../GameCard';
-import './GamePage.css';
 
 interface GamePageProps {
   games: Game[];
@@ -25,13 +24,13 @@ export const GamePage: React.FC<GamePageProps> = ({
 
   if (!game) {
     return (
-      <div className="game-page error-page">
-        <div className="error-content">
-          <h1>🤔 Spel niet gevonden</h1>
-          <p>Het spel dat je zoekt bestaat niet of is verwijderd.</p>
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-100 flex items-center justify-center p-4">
+        <div className="text-center bg-white p-8 sm:p-12 rounded-2xl shadow-lg max-w-md mx-auto">
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-4">🤔 Spel niet gevonden</h1>
+          <p className="text-gray-600 mb-6">Het spel dat je zoekt bestaat niet of is verwijderd.</p>
           <button 
             onClick={() => navigate('/')}
-            className="back-home-btn"
+            className="bg-gradient-to-r from-blue-500 to-purple-600 text-white px-6 py-3 rounded-xl font-bold hover:shadow-lg transform hover:-translate-y-1 transition-all duration-300"
           >
             🏠 Terug naar Home
           </button>
@@ -50,39 +49,49 @@ export const GamePage: React.FC<GamePageProps> = ({
   };
 
   return (
-    <div className="game-page">
-      <div className="game-header">
-        <div className="header-left">
-          <button 
-            onClick={() => navigate('/')}
-            className="back-btn"
-          >
-            ← Terug
-          </button>
-          <div className="game-title">
-            <h1>🎮 {game.name}</h1>
-            <div className="game-meta">
-              <span className="round-info">Ronde {game.currentRound}</span>
-              <span className="player-count">{game.players.length} spelers</span>
-              <span className={`game-status ${game.isActive ? 'active' : 'completed'}`}>
-                {game.isActive ? '🔴 Actief' : '🏁 Voltooid'}
-              </span>
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-100">
+      {/* Header */}
+      <div className="bg-white shadow-lg">
+        <div className="max-w-6xl mx-auto p-4 sm:p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div className="flex items-center gap-4">
+            <button 
+              onClick={() => navigate('/')}
+              className="text-blue-600 hover:text-blue-800 font-medium flex items-center gap-2 transition-colors"
+            >
+              ← Terug
+            </button>
+            <div>
+              <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-800">
+                🎮 {game.name}
+              </h1>
+              <div className="flex flex-wrap gap-2 sm:gap-4 text-sm text-gray-600 mt-1">
+                <span className="bg-blue-100 text-blue-700 px-2 py-1 rounded-full font-medium">
+                  Ronde {game.currentRound}
+                </span>
+                <span>{game.players.length} spelers</span>
+                <span className={`px-2 py-1 rounded-full font-medium ${
+                  game.isActive 
+                    ? 'bg-green-100 text-green-700' 
+                    : 'bg-yellow-100 text-yellow-700'
+                }`}>
+                  {game.isActive ? '🔴 Actief' : '🏁 Voltooid'}
+                </span>
+              </div>
             </div>
           </div>
-        </div>
-        
-        <div className="header-actions">
+          
           <button 
             onClick={() => setShowDeleteConfirm(true)}
-            className="delete-btn"
+            className="bg-red-50 text-red-500 border border-red-200 px-4 py-2 rounded-lg hover:bg-red-500 hover:text-white transition-all duration-300 font-medium"
             title="Spel verwijderen"
           >
-            🗑️
+            🗑️ Verwijderen
           </button>
         </div>
       </div>
 
-      <div className="game-content">
+      {/* Game Content */}
+      <div className="max-w-6xl mx-auto p-4 sm:p-6">
         <GameCard
           game={game}
           onAddRound={onAddRound}
@@ -92,23 +101,23 @@ export const GamePage: React.FC<GamePageProps> = ({
 
       {/* Delete confirmation modal */}
       {showDeleteConfirm && (
-        <div className="modal-overlay" onClick={() => setShowDeleteConfirm(false)}>
-          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-            <h3>🗑️ Spel verwijderen?</h3>
-            <p>
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50" onClick={() => setShowDeleteConfirm(false)}>
+          <div className="bg-white rounded-2xl p-6 sm:p-8 max-w-md w-full" onClick={(e) => e.stopPropagation()}>
+            <h3 className="text-xl sm:text-2xl font-bold text-gray-800 mb-4">🗑️ Spel verwijderen?</h3>
+            <p className="text-gray-600 mb-6 leading-relaxed">
               Weet je zeker dat je <strong>"{game.name}"</strong> wilt verwijderen? 
               Dit kan niet ongedaan worden gemaakt.
             </p>
-            <div className="modal-actions">
+            <div className="flex gap-3">
               <button 
                 onClick={() => setShowDeleteConfirm(false)}
-                className="cancel-btn"
+                className="flex-1 bg-gray-100 text-gray-700 px-4 py-3 rounded-xl font-medium hover:bg-gray-200 transition-colors"
               >
                 Annuleren
               </button>
               <button 
                 onClick={handleDeleteGame}
-                className="confirm-delete-btn"
+                className="flex-1 bg-red-500 text-white px-4 py-3 rounded-xl font-medium hover:bg-red-600 transition-colors"
               >
                 Ja, verwijderen
               </button>
