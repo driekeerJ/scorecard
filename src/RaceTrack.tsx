@@ -59,10 +59,9 @@ export const RaceTrack: React.FC<RaceTrackProps> = ({ players, isAnimating, isGa
     if (winCondition === 'highest') {
       return b.score - a.score;
     } else {
-      // Voor 'lowest': sorteer van laag naar hoog, maar alleen als scores > 0
-      const aScore = a.score || Infinity;
-      const bScore = b.score || Infinity;
-      return aScore - bScore;
+      // Voor 'lowest': sorteer van laag naar hoog
+      // 0 is een geldige lage score, dus gebruik de werkelijke waarde
+      return a.score - b.score;
     }
   });
   
@@ -70,8 +69,10 @@ export const RaceTrack: React.FC<RaceTrackProps> = ({ players, isAnimating, isGa
   const playersWithPositions = players.map((player) => {
     let progress: number;
     
-    if (player.score === 0) {
-      progress = 8; // Start positie (iets na de start lijn)
+    // Voor de startpositie gebruiken we een kleine waarde
+    if (players.every(p => p.score === 0)) {
+      // Alle spelers hebben 0 punten
+      progress = 8;
     } else {
       let scoreRatio: number;
       
@@ -80,8 +81,8 @@ export const RaceTrack: React.FC<RaceTrackProps> = ({ players, isAnimating, isGa
         scoreRatio = player.score / maxScore;
       } else {
         // Voor 'lowest': lager is beter, dus inverteer de ratio
-        const minScore = Math.min(...players.filter(p => p.score > 0).map(p => p.score));
-        const maxScore = Math.max(...players.map(p => p.score), 1);
+        const minScore = Math.min(...players.map(p => p.score));
+        const maxScore = Math.max(...players.map(p => p.score));
         
         if (minScore === maxScore) {
           // Alle spelers hebben dezelfde score
@@ -104,12 +105,12 @@ export const RaceTrack: React.FC<RaceTrackProps> = ({ players, isAnimating, isGa
     return {
       ...player,
       position: Math.min(progress, 90), // Hard cap op 90%
-      isLeading: sortedPlayers[0]?.id === player.id && player.score > 0
+      isLeading: sortedPlayers[0]?.id === player.id
     };
   });
 
   const winner = sortedPlayers[0];
-  const hasWinner = winner && winner.score > 0;
+  const hasWinner = winner && (players.some(p => p.score > 0) || players.every(p => p.score === 0));
 
   return (
     <div className={`bg-gray-50 rounded-xl p-4 sm:p-6 ${isAnimating ? 'animate-pulse' : ''} ${isGameCompleted ? 'bg-yellow-50' : ''}`}>

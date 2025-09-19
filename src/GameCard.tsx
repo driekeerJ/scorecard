@@ -28,7 +28,7 @@ export const GameCard: React.FC<GameCardProps> = ({ game, onAddRound, onEndGame 
   };
 
   const canSubmitRound = game.players.some(player => 
-    roundScores[player.id] && parseInt(roundScores[player.id]) > 0
+    roundScores[player.id] && roundScores[player.id].trim() !== ''
   );
 
   return (
